@@ -1,5 +1,6 @@
 
 import os
+import sys
 import urllib.request
 from sklearn.externals import joblib
 from sklearn import datasets
@@ -8,8 +9,13 @@ from sklearn.svm import LinearSVC
 import numpy as np
 from collections import Counter
 
+#игнорирование предупреждений
 import warnings
 warnings.simplefilter("ignore", DeprecationWarning)
+
+#изменение текущего окружения на окружение скрипта
+pathProgramm = os.path.dirname(sys.argv[0])
+os.chdir(pathProgramm)
 
 file_path = "scikit_learn_data/mldata/"
 

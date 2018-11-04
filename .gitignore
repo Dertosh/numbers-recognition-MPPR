@@ -1,1 +1,14 @@
 test
+*/obj/
+*/.vs
+*/bin
+*/packages
+*/.vscode
+__pycache__
+*/__pycache__
+scikit_learn_data
+digits_cls.pkl
+*/scikit_learn_data
+*/digits_cls.pkl
+*/image_mnist.bmp
+*/image.png

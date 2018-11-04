@@ -12,18 +12,29 @@ import zmq
 
 from PIL import Image, ImageFilter
 
+#игнорирование предупреждений
+import warnings
+warnings.simplefilter("ignore", DeprecationWarning)
+
+#изменение текущего окружения на окружение скрипта
+pathProgramm = os.path.dirname(sys.argv[0])
+os.chdir(pathProgramm)
+
 # Запуск сервера
 context = zmq.Context(1)
 server = context.socket(zmq.REP)
 server.bind("tcp://*:5556")
 
 # Загрузка HOG-классификатора
-clf = joblib.load("digits_cls.pkl")
+try:
+    clf = joblib.load("digits_cls.pkl")
+except IOError:
+    print("E: No digits_cls")
+    exit()
 
 print("I: Server started")
 
-pathProgramm = os.path.dirname(sys.argv[0])
-os.chdir(pathProgramm)
+
 
 while True:
     request = server.recv()
