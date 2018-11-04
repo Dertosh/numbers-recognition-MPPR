@@ -64,12 +64,14 @@ while True:
     # Окружить прямоугольниками каждый контур
     #rects = [cv2.boundingRect(ctr) for ctr in ctrs]
     if not ctrs:
+        server.send(request)
+        print("E: Empty image" )
         continue
     
     try:
         # Для каждой обнаруженной области, найти  HOG и 
         # предсказать по полученной модели Linear SVM цифру
-        rect = cv2.boundingRect(ctrs[0])
+        rect = cv2.boundingRect(sorted(ctrs, key=cv2.contourArea, reverse=True)[0]) # получить самый большой контур
         # Нарисовать прямоугольник
         cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
         # Вычленить полученный прямоугольник из изображения
