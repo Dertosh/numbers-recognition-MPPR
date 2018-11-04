@@ -6,7 +6,7 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:paint"
         mc:Ignorable="d"
-        Title="MNIST-paint" Height="400" Width="525" MaxHeight="400" MinHeight="400" MaxWidth="525" MinWidth="525">
+        Title="MNIST-paint" Height="400" Width="525" MinHeight="400" MinWidth="525">
     <TabControl>
         <TabItem Header="Настройка">
             <StackPanel>

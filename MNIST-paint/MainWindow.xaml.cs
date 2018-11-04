@@ -126,7 +126,7 @@ namespace paint
                         throw new ZException(error);
                     }
 
-                    int sequence = 0;
+                    int sequence = 10;
                     int retries_left = LPClient_RequestRetries;
                     var poll = ZPollItem.CreateReceiver();
 
@@ -135,7 +135,7 @@ namespace paint
                         // We send a request, then we work to get a reply
                         using (var outgoing = ZFrame.Create(4))
                         {
-                            outgoing.Write(++sequence);
+                            outgoing.Write(sequence);
                             if (!requester.Send(outgoing, out error))
                             {
                                 if (error == ZError.ETERM)
@@ -159,7 +159,10 @@ namespace paint
                             {
                                 // We got a reply from the server
                                 int incoming_sequence = incoming[0].ReadInt32();
-                                TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": I: Сервер ответил: ({0}) \n", incoming_sequence));
+                                if(incoming_sequence>=0&&incoming_sequence<=9)
+                                    TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": I: Сервер ответил: ({0}) \n", incoming_sequence));
+                                else
+                                    TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": E: Ошибка на стороне сервера: ({0}) \n", incoming_sequence));
                                 retries_left = LPClient_RequestRetries;
                                 break;
                             }
@@ -170,7 +173,7 @@ namespace paint
                             {
                                 if (--retries_left == 0)
                                 {
-                                    TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": E: Кажется, что сервер недоступен \n"));
+                                    TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": E: Сервер недоступен \n"));
                                     break;
                                 }
 
@@ -210,7 +213,7 @@ namespace paint
                 }
                 catch
                 {
-                    TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": E: Все горит в огне. Ошибка запроса. \n"));
+                    TextBoard.AppendText(DateTime.Now.TimeOfDay.ToString() + String.Format(": E: Ошибка запроса. \n"));
                 }
                 finally
                 {

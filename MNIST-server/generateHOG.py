@@ -1,4 +1,3 @@
-# Импортирование библиотек
 
 import os
 import urllib.request

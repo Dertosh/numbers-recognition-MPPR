@@ -1,4 +1,7 @@
+
 import sys
+import os
+from time import sleep
 import cv2
 from sklearn.externals import joblib
 from skimage.feature import hog
@@ -17,10 +20,22 @@ server.bind("tcp://*:5556")
 # Загрузка HOG-классификатора
 clf = joblib.load("digits_cls.pkl")
 
+print("I: Server started")
+
+pathProgramm = os.path.dirname(sys.argv[0])
+os.chdir(pathProgramm)
+
 while True:
     request = server.recv()
 
-    imageconvert = Image.open("image.png").convert('L') # Открытие изображения
+    try:
+        image=Image.open("image.png")  # Открытие изображения
+        imageconvert = image.convert('L')
+    except IOError:
+        server.send(request)
+        print("E: No image")
+        continue
+        
 
     width = int(round(float(imageconvert.size[0]+300)))
     height = int(round(float(imageconvert.size[1]+300)))
@@ -50,6 +65,7 @@ while True:
     #rects = [cv2.boundingRect(ctr) for ctr in ctrs]
     if not ctrs:
         continue
+    
     try:
         # Для каждой обнаруженной области, найти  HOG и 
         # предсказать по полученной модели Linear SVM цифру
@@ -69,7 +85,7 @@ while True:
                 14, 14), cells_per_block=(1, 1), visualize=False, block_norm='L2-Hys')
         nbr = clf.predict(np.array([roi_hog_fd], 'float64'))
         request = nbr[0]
-        print("number: ",nbr[0])
+        print("I: Number: ",nbr[0])
         cv2.putText(im, str(int(nbr[0])), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
     except IOError as err:
         print("I/O error: {0}".format(err))
@@ -85,7 +101,7 @@ while True:
     cv2.imwrite('image_mnist.bmp', im)
     #cv2.waitKey()
       
-    print("I: Normal request")
+    #print("I: Normal request")
     server.send(request)
 
 server.close()
