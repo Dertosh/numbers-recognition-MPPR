@@ -5,6 +5,3 @@
 1. Выбрать путь картинки в папку MNIST-server/image.png
 1. Нарисовать цифру и отправить на распознование (вкладка "Тестирование")
 
-## Ресурсы
-* https://habr.com/company/wunderfund/blog/314242/
-* https://keras.io/
